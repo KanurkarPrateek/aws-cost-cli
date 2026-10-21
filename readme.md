@@ -187,6 +187,14 @@ The same cost analysis can run as a Lambda function on a schedule and post to Sl
 - **Daily** (default: every day 09:00): yesterday, last 7 days, this month and last month, plus a per-service breakdown for yesterday.
 - **Monthly** (default: 1st of each month 09:00): a full plain-text report for the month that just ended. It covers the total, the change vs the month before, daily average, most and least expensive days, cost per service with change and share, the biggest changes, and the cost of every day. Long reports are split into several Slack messages.
 
+**Daily report in Slack**
+
+![Daily Slack Report](./.github/images/lambda-daily-slack.png)
+
+**Monthly report in Slack**
+
+![Monthly Slack Report](./.github/images/lambda-monthly-slack.png)
+
 ### Deploy
 
 You need Node.js, `zip`, and the AWS CLI logged in to the account you want to report on.
