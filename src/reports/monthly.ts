@@ -33,9 +33,20 @@ export function buildMonthlyTextReport(accountAlias: string, costs: MonthlyCosts
     if (!lowestDay || costs.byDay[day] < costs.byDay[lowestDay]) lowestDay = day;
   }
 
+  const services = Object.keys(costs.byService).sort((a, b) => costs.byService[b] - costs.byService[a]);
+  const shown = services.filter(
+    (s) => costs.byService[s] >= minServiceCost || costs.previousByService[s] >= minServiceCost
+  );
+  const hidden = services.filter((s) => !shown.includes(s));
+
+  // Service table columns; divider lines match the table's full width
+  const nameWidth = Math.min(40, Math.max(20, ...shown.map((s) => s.length)) + 2);
+  const col = 13;
+  const width = nameWidth + col * 2 + 9 + 8;
+
   const lines: string[] = [];
-  const rule = '='.repeat(78);
-  const thin = '-'.repeat(78);
+  const rule = '='.repeat(width);
+  const thin = '-'.repeat(width);
 
   lines.push(`AWS MONTHLY COST REPORT - ${monthLabel}`);
   lines.push(`Account: ${accountAlias}`);
@@ -67,15 +78,6 @@ export function buildMonthlyTextReport(accountAlias: string, costs: MonthlyCosts
   lines.push('');
 
   // --- By service
-  const services = Object.keys(costs.byService).sort((a, b) => costs.byService[b] - costs.byService[a]);
-  const shown = services.filter(
-    (s) => costs.byService[s] >= minServiceCost || costs.previousByService[s] >= minServiceCost
-  );
-  const hidden = services.filter((s) => !shown.includes(s));
-
-  const nameWidth = Math.min(40, Math.max(20, ...shown.map((s) => s.length)) + 2);
-  const col = 13;
-
   lines.push('COST BY SERVICE');
   lines.push(thin);
   lines.push(
